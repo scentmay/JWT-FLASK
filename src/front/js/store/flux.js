@@ -2,7 +2,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
-			user: null,
+			user: {
+				"email": "",
+				"token": ""
+				},
+			logged: false,
 			demo: [
 				{
 					title: "FIRST",
@@ -20,9 +24,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			cleanStore: () => {
 				//Eliminamos token de la store y de la sesión del navegador
-				console.log("Limpiando store...")
-				setStore({token: undefined})
+				console.log("Limpiando store...");
+				setStore({user: {"email": "","token": ""}});
 				sessionStorage.removeItem("token");
+				setStore({logged: false});
 			},
 
 			register:  async (email, password) => {
@@ -72,20 +77,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 				.then((res)=> {
 						if (!res.ok) {
 							alert("Credenciales incorrectas");
+							return false;
 						}
 						return res.json();
 					})
 				.then((data) => {
 					console.log("this came from the backend", data)
+					const store = getStore();
 					setStore({user: data})
+					setStore({logged: true})
 					// //almacenamos el token en la sesión del navegador
-					// sessionStorage.setItem("token", data.access_token)
-					// //almacenamos también el token en la store
-					// setStore({token: data.access_token})
+					sessionStorage.setItem("token", data.token)
+					return true;
 				})
 				
 				.catch((error) => {
 						console.error("Ha ocurrido un error " + error);
+						
 				})
 			},
 

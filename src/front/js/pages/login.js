@@ -19,34 +19,20 @@ export const Login = () => {
   }
 
   const handleClick = () => {
-    actions.login(email, password);
-
-    // //Comprobamos si el logado fue ok
-    // let logged = false;
-    // if (store.user != null) logged = true;
-
-    // //y actuamos en consecuencia
-    // if (logged) {
-    //   console.log("logado" + store.user)
-    // }else {
-    //   console.log("inténtelo de nuevo, logado fallido")
-    // }
-
-
+   actions.login(email, password);
   };
 
-  //caso de que exista un token, nos saca de la página de login a la de home
-  if(store.token && store.token != "" && store.token != undefined) { navigate("/private") }
+  //Una vez logado, si es correcto el token, nos lleva a nuestra página privada
+  if(store.user.token && store.user.token != "" && store.user.token != undefined) { navigate("/private") }
 
   return (
     <div className="text-center mt-5">
       <h1>Estás en la página de Login</h1>
         {
-          (store.token && store.token != "" && store.token != undefined) ?
+          (store.user.token && store.user.token != "" && store.user.token != undefined) ?
            ( 
            <div>
-            <p>Estas logado con el token: {store.token}</p>
-            <Link to={'/'} className="btn btn-primary btn-lg mt-3">Ir a home</Link>
+            <p>Estas logado con el token: {store.user.token}</p>
             <Link to={'/'} className="btn btn-primary btn-lg mt-3 ms-3" onClick={logOut}>Log out</Link>
             <Link to={'/private'} className="btn btn-primary btn-lg mt-3 ms-3">Página privada</Link>
            </div>
