@@ -2,6 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			user: null,
 			demo: [
 				{
 					title: "FIRST",
@@ -16,6 +17,79 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 		},
 		actions: {
+
+			cleanStore: () => {
+				//Eliminamos token de la store y de la sesión del navegador
+				console.log("Limpiando store...")
+				setStore({token: undefined})
+				sessionStorage.removeItem("token");
+			},
+
+			register:  async (email, password) => {
+
+				const opts = {
+					method: 'POST',
+					headers: {
+					  "Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+					  "email": email,
+					  "password": password
+					})
+				  };
+
+				await fetch("https://3001-4geeksacade-reactflaskh-y5ue43ms0em.ws-eu62.gitpod.io/api/register", opts)
+
+				.then ((res) => {
+					if (!res.ok) {
+						console.log("Ha ocurrido un error en el primer paso del fetch");
+					}
+					return res.json();
+				})
+				.then((data) => {
+					console.log("Usuario creado (mensaje del front) " + data);
+				})
+				.catch((error) => {
+					console.error("Ha ocurrido un error " + error);
+				})
+			},
+			
+
+			login: async (email, password) => {
+
+				const opts = {
+					method: 'POST',
+					headers: {
+					  "Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+					  "email": email,
+					  "password": password
+					})
+				  };
+
+				await fetch('https://3001-4geeksacade-reactflaskh-y5ue43ms0em.ws-eu62.gitpod.io/api/login', opts)
+				.then((res)=> {
+						if (!res.ok) {
+							alert("Credenciales incorrectas");
+						}
+						return res.json();
+					})
+				.then((data) => {
+					console.log("this came from the backend", data)
+					setStore({user: data})
+					// //almacenamos el token en la sesión del navegador
+					// sessionStorage.setItem("token", data.access_token)
+					// //almacenamos también el token en la store
+					// setStore({token: data.access_token})
+				})
+				
+				.catch((error) => {
+						console.error("Ha ocurrido un error " + error);
+				})
+			},
+
+
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
