@@ -20,6 +20,8 @@ export const Login = () => {
 
   const handleClick = () => {
    actions.login(email, password);
+   setEmail("");
+   setPassword("");
   };
 
   //Una vez logado, si es correcto el token, nos lleva a nuestra página privada
@@ -38,22 +40,20 @@ export const Login = () => {
            </div>
            ) :
            ( 
-          <div>
-            <input type="text" className="inputs" placeholder="email" value={email} onChange={(e) => {
-              setEmail(e.target.value)
-            }} />
-            <input type="text" placeholder="password" value={password} onChange={(e) => {
-              setPassword(e.target.value)
-            }} />
-            <button onClick={handleClick}>Login</button>
-            <div>
-              <Link to={'/signup'} className="btn btn-primary btn-lg mt-3 ms-3">Registro</Link>
-            </div>
-          </div>
+              <div>
+                <input autoFocus type="text" placeholder="email" value={email} onChange={(e) => {
+                  setEmail(e.target.value)
+                }} />
+                <input type="text" placeholder="password" value={password} onChange={(e) => {
+                  setPassword(e.target.value)
+                }} />
+                <button onClick={handleClick}>Login</button>
+                <div>
+                  <Link to={'/signup'} className="btn btn-primary btn-lg mt-3 ms-3">Registro</Link>
+                </div>
+              </div>
           )
         }
-      
-      
     </div>
   );
 };
