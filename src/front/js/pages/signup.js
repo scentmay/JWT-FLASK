@@ -12,10 +12,11 @@ export const Signup = () => {
 	
 	const handleClick = () => {
 		actions.register(email, password);
-		//una vez registrado, redirigimos al usuario a la página de login
-		alert("Registrado con éxito con el mail " + email + ", será redirigido a la página de login");
-		navigate("/");
 	}
+
+	useEffect(() => {
+		if (store.flag) navigate("/");
+	}, [store.flag])
 
 	return (
 		<div className="container text-center mt-5">

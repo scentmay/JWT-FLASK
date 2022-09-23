@@ -7,6 +7,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				"token": ""
 				},
 			logged: false,
+			flag: false,
 			demo: [
 				{
 					title: "FIRST",
@@ -32,6 +33,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			register:  async (email, password) => {
 
+				const store = getStore();
+
 				const opts = {
 					method: 'POST',
 					headers: {
@@ -43,16 +46,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 				  };
 
-				await fetch("https://3001-4geeksacade-reactflaskh-y5ue43ms0em.ws-eu62.gitpod.io/api/register", opts)
+				await fetch( process.env.BACKEND_URL + "/api/register", opts)
 
 				.then ((res) => {
 					if (!res.ok) {
-						console.log("Ha ocurrido un error en el primer paso del fetch");
+						alert("Ha ocurrido un error en el primer paso del fetch, vuelva a intentarlo");
+						setStore({flag: false})
+						return;
 					}
-					return res.json();
+					else {
+						setStore({flag: true})
+						return res.json();
+					}
 				})
 				.then((data) => {
-					console.log("Usuario creado (mensaje del front) " + data);
+					//console.log("Usuario creado (mensaje del front) " + data);
+					if (store.flag) {
+						console.log("Registrado con éxito")
+						//una vez registrado, redirigimos al usuario a la página de login
+						alert("Registrado con éxito con el mail " + email + ", será redirigido a la página de login");
+						setStore({flag: false})
+					}
+					 
 				})
 				.catch((error) => {
 					console.error("Ha ocurrido un error " + error);
@@ -73,7 +88,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 				  };
 
-				await fetch('https://3001-4geeksacade-reactflaskh-y5ue43ms0em.ws-eu62.gitpod.io/api/login', opts)
+				await fetch(process.env.BACKEND_URL + "/api/login", opts)
 				.then((res)=> {
 						if (!res.ok) {
 							alert("Credenciales incorrectas");
